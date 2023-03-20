@@ -1,13 +1,17 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {View, StyleSheet} from 'react-native';
-import {Title, IconButton} from 'react-native-paper';
+import {Title} from 'react-native-paper';
 import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
 import {Colors} from '../components/constants/theme';
 
+// Auth statements
+import {AuthContext} from '../navigation/AuthProvider';
+
 export default function SignupScreen({navigation}: any) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const {register} = useContext(AuthContext);
 
   return (
     <View style={styles.container}>
@@ -31,6 +35,7 @@ export default function SignupScreen({navigation}: any) {
       <FormButton
         title="Creează un cont"
         modeValue="contained"
+        onPress={() => register(email, password)}
         labelStyle={styles.loginButtonLabel}
       />
       <FormButton

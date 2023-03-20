@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
     color: Colors.black,
     borderRadius: 10,
     marginBottom: 10,
+    fontSize: 18,
   },
   buttonContainer: {
     width: width / 1.5,
