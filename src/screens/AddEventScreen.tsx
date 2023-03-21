@@ -1,14 +1,31 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {IconButton, Title} from 'react-native-paper';
-import FormInput from '../components/FormInput';
-import FormButton from '../components/FormButton';
+import firestore from '@react-native-firebase/firestore';
 
 // Constants
 import {Colors} from '../components/constants/theme';
 
+// Components
+import FormInput from '../components/FormInput';
+import FormButton from '../components/FormButton';
+
 export default function AddEventScreen({navigation}: any) {
-  const [roomName, setRoomName] = useState('');
+  const [eventName, setEventName] = useState('');
+
+  function handleButtonPress() {
+    if (eventName.length > 0) {
+      firestore()
+        .collection('EVENTS')
+        .add({name: eventName})
+        .then(() => {
+          navigation.navigate('Home');
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+  }
 
   return (
     <View style={styles.rootContainer}>
@@ -24,9 +41,9 @@ export default function AddEventScreen({navigation}: any) {
         <Title style={styles.title}>Creează un nou eveniment</Title>
         <FormInput
           labelName="Nume eveniment"
-          value={roomName}
+          value={eventName}
           onChangeText={(text: React.SetStateAction<string>) =>
-            setRoomName(text)
+            setEventName(text)
           }
           color="#000"
         />
@@ -35,7 +52,7 @@ export default function AddEventScreen({navigation}: any) {
           modeValue="contained"
           labelStyle={styles.buttonLabel}
           onPress={() => handleButtonPress()}
-          disabled={roomName.length === 0}
+          disabled={eventName.length === 0}
         />
       </View>
     </View>
