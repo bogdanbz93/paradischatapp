@@ -19,7 +19,7 @@ const ModalStack = createStackNavigator();
 import {AuthContext} from '../navigation/AuthProvider';
 
 function ChatApp({navigation}: any) {
-  const {user, logout} = useContext(AuthContext);
+  const {logout} = useContext(AuthContext);
 
   return (
     <ChatAppStack.Navigator

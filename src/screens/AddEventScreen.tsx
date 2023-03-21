@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {IconButton, Title} from 'react-native-paper';
 import firestore from '@react-native-firebase/firestore';
@@ -6,18 +6,22 @@ import firestore from '@react-native-firebase/firestore';
 // Constants
 import {Colors} from '../components/constants/theme';
 
+// Auth Statements
+import {AuthContext} from '../navigation/AuthProvider';
+
 // Components
 import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
 
 export default function AddEventScreen({navigation}: any) {
   const [eventName, setEventName] = useState('');
+  const {user} = useContext(AuthContext);
 
   function handleButtonPress() {
     if (eventName.length > 0) {
       firestore()
         .collection('EVENTS')
-        .add({name: eventName})
+        .add({name: eventName, user: user.uid})
         .then(() => {
           navigation.navigate('Home');
         })
