@@ -1,37 +1,52 @@
 import React, {useContext} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Text} from 'react-native';
 import {Title} from 'react-native-paper';
 import FormButton from '../components/FormButton';
-
+import {Colors} from '../components/constants/theme';
 // Auth statements
 import {AuthContext} from '../navigation/AuthProvider';
 
-export default function HomeScreen() {
+export default function HomeScreen({navigation}: any) {
   const {user, logout} = useContext(AuthContext);
 
   return (
     <View style={styles.container}>
-      <Title>Evenimente</Title>
-      <Title style={{textAlign: 'center', fontSize: 12}}>
-        Esti logat in: {JSON.stringify(user)}
-      </Title>
-      <FormButton
-        modeValue="contained"
-        title="Logout"
-        onPress={() => logout()}
-        labelStyle={{fontSize: 20}}
-      />
+      <Title style={styles.title}>Evenimente</Title>
+      <Text style={{marginBottom: 20}}>{user.uid}</Text>
+      <View>
+        <FormButton
+          modeValue="text"
+          title="Ieși din cont"
+          labelStyle={{color: '#000'}}
+          onPress={() => logout()}
+        />
+
+        <FormButton
+          modeValue="contained"
+          title="Creeaza un eveniment"
+          labelStyle={styles.navButtonText}
+          onPress={() => navigation.navigate('AddEvent')}
+        />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  title: {
+    color: Colors.black,
+  },
+
   container: {
     backgroundColor: '#f5f5f5',
-    paddingLeft: 15,
-    paddingRight: 15,
+    color: '#000',
+    padding: 15,
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+  },
+  navButtonText: {
+    color: Colors.white,
+    fontSize: 16,
   },
 });

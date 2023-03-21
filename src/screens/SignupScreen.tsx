@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   loginButtonLabel: {
-    color: Colors.black,
+    color: Colors.white,
     fontSize: 20,
   },
   navButtonText: {
