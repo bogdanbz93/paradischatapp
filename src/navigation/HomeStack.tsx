@@ -1,6 +1,5 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {Text} from 'react-native';
 
 // Constants
 import {Colors} from '../components/constants/theme';
@@ -16,7 +15,12 @@ import {IconButton} from 'react-native-paper';
 const ChatAppStack = createStackNavigator();
 const ModalStack = createStackNavigator();
 
+// Auth statements
+import {AuthContext} from '../navigation/AuthProvider';
+
 function ChatApp({navigation}: any) {
+  const {user, logout} = useContext(AuthContext);
+
   return (
     <ChatAppStack.Navigator
       initialRouteName="Home"
@@ -33,11 +37,19 @@ function ChatApp({navigation}: any) {
         component={HomeScreen}
         options={{
           title: 'Evenimentele mele',
+          headerLeft: () => (
+            <IconButton
+              icon="logout"
+              size={24}
+              iconColor="#fff"
+              onPress={() => logout()}
+            />
+          ),
           headerRight: () => (
             <IconButton
-              icon="message-plus"
+              icon="plus-circle"
               size={24}
-              color="#ffffff"
+              iconColor="#fff"
               onPress={() => navigation.navigate('AddEvent')}
             />
           ),

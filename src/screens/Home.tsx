@@ -11,23 +11,8 @@ export default function HomeScreen({navigation}: any) {
 
   return (
     <View style={styles.container}>
-      <Title style={styles.title}>Evenimente</Title>
+      <Title style={styles.title}>Evenimente listate:</Title>
       <Text style={{marginBottom: 20}}>{user.uid}</Text>
-      <View>
-        <FormButton
-          modeValue="text"
-          title="Ieși din cont"
-          labelStyle={{color: '#000'}}
-          onPress={() => logout()}
-        />
-
-        <FormButton
-          modeValue="contained"
-          title="Creeaza un eveniment"
-          labelStyle={styles.navButtonText}
-          onPress={() => navigation.navigate('AddEvent')}
-        />
-      </View>
     </View>
   );
 }
