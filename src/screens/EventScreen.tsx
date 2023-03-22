@@ -4,7 +4,12 @@ import {IconButton} from 'react-native-paper';
 import {StyleSheet, View, ActivityIndicator} from 'react-native';
 import {Colors} from '../components/constants/theme';
 
-export default function EventScreen() {
+// Moment
+import moment from 'moment';
+import 'moment/locale/ro';
+moment.locale('ro');
+
+export default function EventScreen({route}: any) {
   const [messages, setMessages] = useState<any>([
     /**
      * Mock message data
@@ -13,14 +18,18 @@ export default function EventScreen() {
     {
       _id: 0,
       text: 'Ați început discuția evenimentului.',
-      createdAt: new Date().getTime(),
+      createdAt: route.params.event.createdAt.toDate(),
       system: true,
     },
     // example of chat message
     {
       _id: 1,
-      text: 'Buna ziua, cu ce va putem ajuta?',
-      createdAt: new Date().getTime(),
+      text: `Bună ziua! \n\nAți selectat evenimentul "${
+        route.params.event.name
+      }", creat cu ${moment(route.params.createdAt)
+        .startOf('day')
+        .fromNow()}. \n\nLăsați-ne un mesaj și vă vom răspunde cât de repede posibil. Cu ce vă putem ajuta?`,
+      createdAt: route.params.event.createdAt.toDate(),
       user: {
         _id: 2,
         name: 'Restaurant Paradis',
