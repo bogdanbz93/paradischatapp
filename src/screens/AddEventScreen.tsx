@@ -1,7 +1,7 @@
 import React, {useContext, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {IconButton, Title} from 'react-native-paper';
-import firestore from '@react-native-firebase/firestore';
+import firestore, {firebase} from '@react-native-firebase/firestore';
 
 // Constants
 import {Colors} from '../components/constants/theme';
@@ -21,7 +21,11 @@ export default function AddEventScreen({navigation}: any) {
     if (eventName.length > 0) {
       firestore()
         .collection('EVENTS')
-        .add({name: eventName, user: user.uid})
+        .add({
+          name: eventName,
+          user: user.uid,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        })
         .then(() => {
           navigation.navigate('Home');
         })

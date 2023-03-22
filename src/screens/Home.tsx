@@ -4,6 +4,11 @@ import {List, Title} from 'react-native-paper';
 import firestore from '@react-native-firebase/firestore';
 import Loading from '../components/Loading';
 
+// Moment
+import moment from 'moment';
+import 'moment/locale/ro';
+moment.locale('ro');
+
 // Constants
 import {Colors} from '../components/constants/theme';
 
@@ -46,7 +51,18 @@ export default function HomeScreen({navigation}: any) {
     <>
       {/* Events list */}
       <View style={styles.container}>
-        <Title style={styles.title}>Discută cu restaurantul:</Title>
+        <View
+          style={{
+            paddingBottom: 20,
+            borderBottomWidth: 1,
+            borderBottomColor: '#eee',
+          }}>
+          <Title style={styles.title}>Selectează un eveniment</Title>
+          <Text style={styles.subTitle}>
+            Un operator va intra într-o discuție live cu tine și te va ajuta cu
+            mai multe detalii despre evenimentul tău.
+          </Text>
+        </View>
         <FlatList
           data={events}
           keyExtractor={(item: any) => item._id}
@@ -55,7 +71,9 @@ export default function HomeScreen({navigation}: any) {
               onPress={() => navigation.navigate('Event', {event: item})}>
               <List.Item
                 title={item.name}
-                description="Eveniment în data de"
+                description={`Creat cu ${moment(item.createdAt)
+                  .startOf('day')
+                  .fromNow()}.`}
                 titleNumberOfLines={1}
                 titleStyle={styles.listTitle}
                 descriptionStyle={styles.listDescription}
@@ -81,18 +99,20 @@ export default function HomeScreen({navigation}: any) {
 const styles = StyleSheet.create({
   title: {
     color: Colors.black,
-    marginBottom: 15,
+  },
+  subTitle: {
+    color: '#999',
   },
   listChat: {
     backgroundColor: '#eee',
-    borderRadius: 10,
-    marginBottom: 15,
+    borderRadius: 100,
+    marginTop: 15,
     paddingHorizontal: 15,
   },
   iconChat: {
     backgroundColor: Colors.primary,
     paddingHorizontal: 10,
-    borderRadius: 10,
+    borderRadius: 100,
   },
   listTitle: {
     color: Colors.black,

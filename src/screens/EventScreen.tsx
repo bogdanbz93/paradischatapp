@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from 'react';
-import {GiftedChat} from 'react-native-gifted-chat';
+import React, {useState} from 'react';
+import {GiftedChat, Bubble, Send} from 'react-native-gifted-chat';
+import {IconButton} from 'react-native-paper';
+import {StyleSheet, View, ActivityIndicator} from 'react-native';
+import {Colors} from '../components/constants/theme';
 
-export default function EventScreen({navigation}: any) {
-  useEffect(() => {
-    navigation.setOptions({title: 'Discuta'});
-  }, []);
+export default function EventScreen() {
   const [messages, setMessages] = useState<any>([
     /**
      * Mock message data
@@ -33,11 +33,88 @@ export default function EventScreen({navigation}: any) {
     setMessages(GiftedChat.append(messages, newMessage));
   }
 
+  function renderBubble(props: any) {
+    return (
+      // Step 3: return the component
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          right: {
+            backgroundColor: Colors.primary,
+          },
+        }}
+        textStyle={{
+          right: {
+            color: '#fff',
+          },
+        }}
+      />
+    );
+  }
+
+  function renderSend(props: any) {
+    return (
+      <Send {...props}>
+        <View style={styles.sendingContainer}>
+          <IconButton
+            icon="send-circle"
+            size={32}
+            iconColor={Colors.primary.toString()}
+          />
+        </View>
+      </Send>
+    );
+  }
+
+  function scrollToBottomComponent() {
+    return (
+      <View style={styles.bottomComponentContainer}>
+        <IconButton
+          icon="chevron-double-down"
+          size={28}
+          iconColor={Colors.black.toString()}
+        />
+      </View>
+    );
+  }
+
+  function renderLoading() {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
+
   return (
     <GiftedChat
       messages={messages}
       onSend={newMessage => handleSend(newMessage)}
-      user={{_id: 1}}
+      user={{_id: 1, name: 'User Test'}}
+      renderBubble={renderBubble}
+      placeholder="Discută cu operatorul nostru.."
+      showUserAvatar
+      alwaysShowSend
+      renderSend={renderSend}
+      scrollToBottom
+      scrollToBottomComponent={scrollToBottomComponent}
+      renderLoading={renderLoading}
     />
   );
 }
+
+const styles = StyleSheet.create({
+  sendingContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  bottomComponentContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});

@@ -59,8 +59,8 @@ function ChatApp({navigation}: any) {
       <ChatAppStack.Screen
         name="Event"
         component={EventScreen}
-        options={{
-          title: 'Evenimentele mele',
+        options={({route}: any) => ({
+          title: route.params ? route.params.event.name : 'Eveniment',
           headerLeft: () => (
             <IconButton
               icon="arrow-left"
@@ -69,7 +69,7 @@ function ChatApp({navigation}: any) {
               onPress={() => navigation.goBack()}
             />
           ),
-        }}
+        })}
       />
     </ChatAppStack.Navigator>
   );
