@@ -17,6 +17,7 @@ const ModalStack = createStackNavigator();
 
 // Auth statements
 import {AuthContext} from '../navigation/AuthProvider';
+import EventScreen from '../screens/EventScreen';
 
 function ChatApp({navigation}: any) {
   const {logout} = useContext(AuthContext);
@@ -51,6 +52,21 @@ function ChatApp({navigation}: any) {
               size={24}
               iconColor="#fff"
               onPress={() => navigation.navigate('AddEvent')}
+            />
+          ),
+        }}
+      />
+      <ChatAppStack.Screen
+        name="Event"
+        component={EventScreen}
+        options={{
+          title: 'Evenimentele mele',
+          headerLeft: () => (
+            <IconButton
+              icon="arrow-left"
+              size={24}
+              iconColor="#fff"
+              onPress={() => navigation.goBack()}
             />
           ),
         }}
