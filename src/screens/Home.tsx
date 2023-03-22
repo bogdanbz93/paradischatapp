@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {View, StyleSheet, FlatList, Text} from 'react-native';
-import {List, Divider, Title} from 'react-native-paper';
+import {List, Title} from 'react-native-paper';
 import firestore from '@react-native-firebase/firestore';
 import Loading from '../components/Loading';
 
@@ -46,13 +46,10 @@ export default function HomeScreen() {
     <>
       {/* Events list */}
       <View style={styles.container}>
-        <Title style={styles.title}>Lista evenimentelor</Title>
+        <Title style={styles.title}>Discută cu restaurantul:</Title>
         <FlatList
           data={events}
           keyExtractor={(item: any) => item._id}
-          ItemSeparatorComponent={() => (
-            <View style={{height: 1, backgroundColor: '#efefef'}} />
-          )}
           renderItem={({item}) => (
             <List.Item
               title={item.name}
@@ -61,7 +58,15 @@ export default function HomeScreen() {
               titleStyle={styles.listTitle}
               descriptionStyle={styles.listDescription}
               descriptionNumberOfLines={1}
-              left={props => <List.Icon {...props} icon="message" />}
+              left={props => (
+                <List.Icon
+                  {...props}
+                  icon="account-circle"
+                  color="#fff"
+                  style={styles.iconChat}
+                />
+              )}
+              style={styles.listChat}
             />
           )}
         />
@@ -75,9 +80,20 @@ const styles = StyleSheet.create({
     color: Colors.black,
     marginBottom: 15,
   },
+  listChat: {
+    backgroundColor: '#eee',
+    borderRadius: 10,
+    marginBottom: 15,
+    paddingHorizontal: 15,
+  },
+  iconChat: {
+    backgroundColor: Colors.primary,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+  },
   listTitle: {
     color: Colors.black,
-    fontSize: 20,
+    fontSize: 18,
   },
   listDescription: {
     color: '#888',
