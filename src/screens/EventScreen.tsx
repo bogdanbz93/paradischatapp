@@ -27,27 +27,7 @@ export default function EventScreen({route}: any) {
   const {event} = route.params;
 
   // Chat
-  const [messages, setMessages] = useState<any>([
-    {
-      _id: 0,
-      text: 'Ați început discuția evenimentului.',
-      createdAt: event.createdAt.toDate(),
-      system: true,
-    },
-    {
-      _id: 1,
-      text: `Bună ziua! \n\nAți selectat evenimentul "${
-        event.name
-      }", creat cu ${moment(route.params.createdAt)
-        .startOf('day')
-        .fromNow()}. \n\nLăsați-ne un mesaj și vă vom răspunde cât de repede posibil. Cu ce vă putem ajuta?`,
-      createdAt: event.createdAt.toDate(),
-      user: {
-        _id: 2,
-        name: 'Restaurant Paradis',
-      },
-    },
-  ]);
+  const [messages, setMessages] = useState<any>([]);
 
   async function handleSend(messages: any) {
     const text = messages[0].text;
@@ -124,6 +104,11 @@ export default function EventScreen({route}: any) {
         wrapperStyle={{
           right: {
             backgroundColor: Colors.primary,
+            padding: 3,
+          },
+          left: {
+            backgroundColor: Colors.gray,
+            padding: 3,
           },
         }}
         textStyle={{
@@ -221,7 +206,9 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   systemMessageWrapper: {
-    backgroundColor: Colors.gray,
+    borderWidth: 1,
+    backgroundColor: '555',
+    borderColor: Colors.gray,
     borderRadius: 10,
     padding: 10,
     marginTop: 5,

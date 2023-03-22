@@ -21,26 +21,32 @@ export default function HomeScreen({navigation}: any) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = firestore()
-      .collection('EVENTS')
-      .where('user', '==', user.uid)
-      .orderBy('latestMessage.createdAt', 'desc')
-      .onSnapshot(querySnapshot => {
-        const rooms = querySnapshot.docs.map(documentSnapshot => {
-          return {
-            _id: documentSnapshot.id,
-            // give defaults
-            name: '',
-            ...documentSnapshot.data(),
-          };
-        });
+    const query =
+      user.uid == 'uX1fouL0cJcRFJ4YoZxcuOF0i5q1'
+        ? firestore()
+            .collection('EVENTS')
+            .orderBy('latestMessage.createdAt', 'desc')
+        : firestore()
+            .collection('EVENTS')
+            .where('user', '==', user.uid)
+            .orderBy('latestMessage.createdAt', 'desc');
 
-        setEvents(rooms);
-
-        if (loading) {
-          setLoading(false);
-        }
+    const unsubscribe = query.onSnapshot(querySnapshot => {
+      const rooms = querySnapshot.docs.map(documentSnapshot => {
+        return {
+          _id: documentSnapshot.id,
+          // give defaults
+          name: '',
+          ...documentSnapshot.data(),
+        };
       });
+
+      setEvents(rooms);
+
+      if (loading) {
+        setLoading(false);
+      }
+    });
     return () => unsubscribe();
   }, []);
 
