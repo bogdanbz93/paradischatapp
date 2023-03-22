@@ -1,7 +1,13 @@
-import React, {useState} from 'react';
-import {GiftedChat, Bubble, Send} from 'react-native-gifted-chat';
+import React, {useState, useContext, useEffect} from 'react';
+import firestore from '@react-native-firebase/firestore';
+import {
+  GiftedChat,
+  Bubble,
+  Send,
+  SystemMessage,
+} from 'react-native-gifted-chat';
 import {IconButton} from 'react-native-paper';
-import {StyleSheet, View, ActivityIndicator} from 'react-native';
+import {StyleSheet, View, ActivityIndicator, Text} from 'react-native';
 import {Colors} from '../components/constants/theme';
 
 // Moment
@@ -9,27 +15,33 @@ import moment from 'moment';
 import 'moment/locale/ro';
 moment.locale('ro');
 
+// Auth Statements
+import {AuthContext} from '../navigation/AuthProvider';
+
 export default function EventScreen({route}: any) {
+  // User
+  const {user} = useContext(AuthContext);
+  const currentUser = user.toJSON();
+
+  // Event
+  const {event} = route.params;
+
+  // Chat
   const [messages, setMessages] = useState<any>([
-    /**
-     * Mock message data
-     */
-    // example of system message
     {
       _id: 0,
       text: 'Ați început discuția evenimentului.',
-      createdAt: route.params.event.createdAt.toDate(),
+      createdAt: event.createdAt.toDate(),
       system: true,
     },
-    // example of chat message
     {
       _id: 1,
       text: `Bună ziua! \n\nAți selectat evenimentul "${
-        route.params.event.name
+        event.name
       }", creat cu ${moment(route.params.createdAt)
         .startOf('day')
         .fromNow()}. \n\nLăsați-ne un mesaj și vă vom răspunde cât de repede posibil. Cu ce vă putem ajuta?`,
-      createdAt: route.params.event.createdAt.toDate(),
+      createdAt: event.createdAt.toDate(),
       user: {
         _id: 2,
         name: 'Restaurant Paradis',
@@ -37,10 +49,72 @@ export default function EventScreen({route}: any) {
     },
   ]);
 
-  // helper method that is sends a message
-  function handleSend(newMessage: any = []) {
-    setMessages(GiftedChat.append(messages, newMessage));
+  async function handleSend(messages: any) {
+    const text = messages[0].text;
+    firestore()
+      .collection('EVENTS')
+      .doc(event._id)
+      .collection('MESSAGES')
+      .add({
+        text,
+        createdAt: new Date().getTime(),
+        user: {
+          _id: currentUser.uid,
+          email: currentUser.email,
+        },
+      });
+
+    await firestore()
+      .collection('EVENTS')
+      .doc(event._id)
+      .set(
+        {
+          latestMessage: {
+            text,
+            createdAt: new Date().getTime(),
+          },
+        },
+        {merge: true},
+      );
   }
+
+  useEffect(() => {
+    const messagesListener = firestore()
+      .collection('EVENTS')
+      .doc(event._id)
+      .collection('MESSAGES')
+      .orderBy('createdAt', 'desc')
+      .onSnapshot(querySnapshot => {
+        const messages = querySnapshot.docs.map(doc => {
+          const firebaseData = doc.data();
+
+          const data: {
+            text: string;
+            _id: string;
+            createdAt: number;
+            user?: string;
+          } = {
+            _id: doc.id,
+            text: '',
+            createdAt: new Date().getTime(),
+            ...firebaseData,
+          };
+
+          if (!firebaseData.system) {
+            data.user = {
+              ...firebaseData.user,
+              name: firebaseData.user.email,
+            };
+          }
+
+          return data;
+        });
+
+        setMessages(messages);
+      });
+
+    return () => messagesListener();
+  }, []);
 
   function renderBubble(props: any) {
     return (
@@ -87,6 +161,21 @@ export default function EventScreen({route}: any) {
     );
   }
 
+  function renderSystemMessage(props: any) {
+    return (
+      <View style={styles.systemMessageContainer}>
+        <Text style={{textAlign: 'center', fontSize: 12, color: '#999'}}>
+          Mesaj automat
+        </Text>
+        <SystemMessage
+          {...props}
+          wrapperStyle={styles.systemMessageWrapper}
+          textStyle={styles.systemMessageText}
+        />
+      </View>
+    );
+  }
+
   function renderLoading() {
     return (
       <View style={styles.loadingContainer}>
@@ -98,8 +187,8 @@ export default function EventScreen({route}: any) {
   return (
     <GiftedChat
       messages={messages}
-      onSend={newMessage => handleSend(newMessage)}
-      user={{_id: 1, name: 'User Test'}}
+      onSend={handleSend}
+      user={{_id: currentUser.uid}}
       renderBubble={renderBubble}
       placeholder="Discută cu operatorul nostru.."
       showUserAvatar
@@ -108,6 +197,7 @@ export default function EventScreen({route}: any) {
       scrollToBottom
       scrollToBottomComponent={scrollToBottomComponent}
       renderLoading={renderLoading}
+      renderSystemMessage={renderSystemMessage}
     />
   );
 }
@@ -125,5 +215,20 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  systemMessageContainer: {
+    marginHorizontal: 15,
+    marginBottom: 15,
+  },
+  systemMessageWrapper: {
+    backgroundColor: Colors.gray,
+    borderRadius: 10,
+    padding: 10,
+    marginTop: 5,
+  },
+  systemMessageText: {
+    fontSize: 14,
+    color: '#555',
+    fontWeight: '500',
   },
 });

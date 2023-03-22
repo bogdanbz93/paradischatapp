@@ -25,8 +25,17 @@ export default function AddEventScreen({navigation}: any) {
           name: eventName,
           user: user.uid,
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          latestMessage: {
+            text: `Ai pornit discuția în ${eventName}.`,
+            createdAt: new Date().getTime(),
+          },
         })
-        .then(() => {
+        .then(docRef => {
+          docRef.collection('MESSAGES').add({
+            text: `Ați selectat evenimentul "${eventName}". \n\nLăsați-ne un mesaj și vă vom răspunde cât de repede posibil. Cu ce vă putem ajuta?`,
+            createdAt: new Date().getTime(),
+            system: true,
+          });
           navigation.navigate('Home');
         })
         .catch(function (error) {

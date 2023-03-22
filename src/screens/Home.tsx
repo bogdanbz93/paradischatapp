@@ -24,6 +24,7 @@ export default function HomeScreen({navigation}: any) {
     const unsubscribe = firestore()
       .collection('EVENTS')
       .where('user', '==', user.uid)
+      .orderBy('latestMessage.createdAt', 'desc')
       .onSnapshot(querySnapshot => {
         const rooms = querySnapshot.docs.map(documentSnapshot => {
           return {
@@ -63,34 +64,36 @@ export default function HomeScreen({navigation}: any) {
             mai multe detalii despre evenimentul tău.
           </Text>
         </View>
-        <FlatList
-          data={events}
-          keyExtractor={(item: any) => item._id}
-          renderItem={({item}) => (
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Event', {event: item})}>
-              <List.Item
-                title={item.name}
-                description={`Creat cu ${moment(item.createdAt)
-                  .startOf('day')
-                  .fromNow()}.`}
-                titleNumberOfLines={1}
-                titleStyle={styles.listTitle}
-                descriptionStyle={styles.listDescription}
-                descriptionNumberOfLines={1}
-                left={props => (
-                  <List.Icon
-                    {...props}
-                    icon="account-circle"
-                    color="#fff"
-                    style={styles.iconChat}
-                  />
-                )}
-                style={styles.listChat}
-              />
-            </TouchableOpacity>
-          )}
-        />
+        {events.length != 0 ? (
+          <FlatList
+            data={events}
+            keyExtractor={(item: any) => item._id}
+            renderItem={({item}) => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate('Event', {event: item})}>
+                <List.Item
+                  title={item.name}
+                  description={item.latestMessage.text}
+                  titleNumberOfLines={1}
+                  titleStyle={styles.listTitle}
+                  descriptionStyle={styles.listDescription}
+                  descriptionNumberOfLines={1}
+                  left={props => (
+                    <List.Icon
+                      {...props}
+                      icon="account-circle"
+                      color="#fff"
+                      style={styles.iconChat}
+                    />
+                  )}
+                  style={styles.listChat}
+                />
+              </TouchableOpacity>
+            )}
+          />
+        ) : (
+          <Text style={{marginTop: 15}}>Nu sunt încă evenimente create.</Text>
+        )}
       </View>
     </>
   );
