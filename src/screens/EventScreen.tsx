@@ -189,6 +189,7 @@ export default function EventScreen({route}: any) {
       messagesContainerStyle={{paddingBottom: 10}}
       showUserAvatar
       alwaysShowSend
+      minInputToolbarHeight={55}
       renderSend={renderSend}
       scrollToBottom
       scrollToBottomComponent={scrollToBottomComponent}
