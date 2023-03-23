@@ -7,7 +7,7 @@ import {
   SystemMessage,
   Actions,
 } from 'react-native-gifted-chat';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {IconButton} from 'react-native-paper';
 import {StyleSheet, View, ActivityIndicator, Text} from 'react-native';
 
@@ -126,11 +126,21 @@ export default function EventScreen({route}: any) {
 
   function renderSend(props: any) {
     return (
-      <Send {...props}>
-        <View style={styles.sendingContainer}>
-          <Icon name="paper-plane" size={22} color={Colors.white} />
-        </View>
-      </Send>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          padding: 5,
+          columnGap: 14,
+        }}>
+        <Icon name="paperclip" size={24} color="#888" />
+        <Icon name="camera" size={24} color="#888" />
+        <Send {...props}>
+          <View style={styles.sendingContainer}>
+            <Icon name="send" size={20} color={Colors.white} />
+          </View>
+        </Send>
+      </View>
     );
   }
 
@@ -175,7 +185,8 @@ export default function EventScreen({route}: any) {
       onSend={handleSend}
       user={{_id: currentUser.uid}}
       renderBubble={renderBubble}
-      placeholder="Discută cu operatorul nostru.."
+      placeholder="Discută cu noi"
+      messagesContainerStyle={{paddingBottom: 10}}
       showUserAvatar
       alwaysShowSend
       renderSend={renderSend}
@@ -187,8 +198,10 @@ export default function EventScreen({route}: any) {
         <>
           <Actions
             onPressActionButton={() => console.log('test')}
-            containerStyle={{position: 'relative'}}
-            icon={() => <Icon name="camera" size={22} color={Colors.black} />}
+            containerStyle={{marginBottom: 14}}
+            icon={() => (
+              <Icon name="emoticon-happy-outline" size={26} color="#888" />
+            )}
           />
         </>
       )}
@@ -201,7 +214,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     backgroundColor: Colors.primary,
     height: '100%',
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
+    borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
   },
