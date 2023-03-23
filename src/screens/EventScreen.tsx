@@ -7,6 +7,7 @@ import {
   SystemMessage,
   Actions,
 } from 'react-native-gifted-chat';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import {IconButton} from 'react-native-paper';
 import {StyleSheet, View, ActivityIndicator, Text} from 'react-native';
 
@@ -127,11 +128,7 @@ export default function EventScreen({route}: any) {
     return (
       <Send {...props}>
         <View style={styles.sendingContainer}>
-          <IconButton
-            icon="send-circle"
-            size={32}
-            iconColor={Colors.primary.toString()}
-          />
+          <Icon name="paper-plane" size={22} color={Colors.white} />
         </View>
       </Send>
     );
@@ -187,18 +184,13 @@ export default function EventScreen({route}: any) {
       renderLoading={renderLoading}
       renderSystemMessage={renderSystemMessage}
       renderActions={() => (
-        <Actions
-          onPressActionButton={() => console.log('test')}
-          containerStyle={{position: 'relative'}}
-          icon={() => (
-            <IconButton
-              icon="send-circle"
-              style={{position: 'absolute', left: 0, top: 0}}
-              size={20}
-              iconColor={Colors.primary.toString()}
-            />
-          )}
-        />
+        <>
+          <Actions
+            onPressActionButton={() => console.log('test')}
+            containerStyle={{position: 'relative'}}
+            icon={() => <Icon name="camera" size={22} color={Colors.black} />}
+          />
+        </>
       )}
     />
   );
@@ -206,6 +198,10 @@ export default function EventScreen({route}: any) {
 
 const styles = StyleSheet.create({
   sendingContainer: {
+    display: 'flex',
+    backgroundColor: Colors.primary,
+    height: '100%',
+    paddingHorizontal: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
