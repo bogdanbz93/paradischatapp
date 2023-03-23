@@ -5,9 +5,12 @@ import {
   Bubble,
   Send,
   SystemMessage,
+  Actions,
 } from 'react-native-gifted-chat';
 import {IconButton} from 'react-native-paper';
 import {StyleSheet, View, ActivityIndicator, Text} from 'react-native';
+
+// Constants
 import {Colors} from '../components/constants/theme';
 
 // Moment
@@ -183,6 +186,20 @@ export default function EventScreen({route}: any) {
       scrollToBottomComponent={scrollToBottomComponent}
       renderLoading={renderLoading}
       renderSystemMessage={renderSystemMessage}
+      renderActions={() => (
+        <Actions
+          onPressActionButton={() => console.log('test')}
+          containerStyle={{position: 'relative'}}
+          icon={() => (
+            <IconButton
+              icon="send-circle"
+              style={{position: 'absolute', left: 0, top: 0}}
+              size={20}
+              iconColor={Colors.primary.toString()}
+            />
+          )}
+        />
+      )}
     />
   );
 }
